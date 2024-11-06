@@ -1,0 +1,15 @@
+# Dependencias principales
+tk                          # Interfaz gráfica con Tkinter (incluida en Python)
+pandas==2.0.3               # Manipulación y carga de datos, especialmente para archivos .csv
+openpyxl==3.1.2             # Lectura y escritura de archivos de Excel (.xlsx)
+matplotlib==3.7.2           # Visualización de gráficos para PERT y CPM
+plotly==5.14.0              # Gráficos interactivos para diagramas PERT y CPM
+
+# Base de datos
+psycopg2==2.9.6             # Conexión y manejo de base de datos PostgreSQL
+
+# Pruebas
+pytest==7.4.0               # Framework para pruebas unitarias e integración
+
+# Utilidades
+python-dotenv==1.0.0        # Carga de variables de entorno desde un archivo .env
