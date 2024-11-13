@@ -42,25 +42,24 @@ class Arbol:
             representation += self._showRecursiveTree(son, prefijo + "  ")
         return representation
     
-    def calcularRutaCritica(self):
-        """Calcula la ruta crítica (el camino más largo en tiempo) y devuelve las actividades."""
-        return self._calcularRutaCriticaRecursive(self.root, 0, [])
+    def calcularRutaCritica(self, pert=False):
+        tiempo_total, ruta_critica = self._calcularRutaCriticaRecursive(self.root, 0, [], pert)
+        return ruta_critica, tiempo_total
+
     
-    def _calcularRutaCriticaRecursive(self, nodo, tiempo_acumulado, actividades):
-        # Calcular la duración acumulada en esta ruta
+    def _calcularRutaCriticaRecursive(self, nodo, tiempo_acumulado, actividades, pert=False):
         tiempo_acumulado += nodo.duration
-        actividades.append(nodo.value)  # Agregar la actividad actual a la ruta
-        
-        if not nodo.sons:  # Si es un nodo hoja, se retorna la duración total y la ruta de actividades
-            return tiempo_acumulado, actividades
-        
-        # Recursivamente calcular las duraciones de los hijos y encontrar el hijo con la duración máxima
+        actividades.append(nodo)
+    
+        if not nodo.sons:
+             return tiempo_acumulado, actividades
+    
         max_tiempo = 0
         mejor_ruta = []
         for son in nodo.sons:
-            tiempo_hijo, ruta_hijo = self._calcularRutaCriticaRecursive(son, tiempo_acumulado, actividades.copy())
-            if tiempo_hijo > max_tiempo:
-                max_tiempo = tiempo_hijo
-                mejor_ruta = ruta_hijo
-        
+             tiempo_hijo, ruta_hijo = self._calcularRutaCriticaRecursive(son, tiempo_acumulado, actividades.copy(), pert)
+             if tiempo_hijo > max_tiempo:
+                   max_tiempo = tiempo_hijo
+                   mejor_ruta = ruta_hijo
+    
         return max_tiempo, mejor_ruta

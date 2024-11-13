@@ -1,9 +1,15 @@
 class Nodo:
-    def __init__(self, value, duration=0):
+    def __init__(self, value, duration, desviacion=0, optimista=None, mas_probable=None, pesimista=None):
         self.value = value
         self.sons = []
-        self.duration = duration  # Duración de la actividad
-        self.predecesores = []  # Guardamos los predecesores (para facilitar el cálculo de la ruta crítica)
+        self.duration = duration
+        self.desviacion = desviacion
+        self.predecesores = []
+        
+        if optimista is not None and mas_probable is not None and pesimista is not None:
+            self.pert_duration = self.calcularDuracionPERT(optimista, mas_probable, pesimista)
+        else:
+            self.pert_duration = self.duration
 
     def addSon(self, nodo):
         self.sons.append(nodo)
@@ -22,4 +28,8 @@ class Nodo:
         return self.sons
     
     def __str__(self):
-        return f"Valor: {self.value}, Duración: {self.duration}, Hijos: {len(self.sons)}"
+        return f"Valor: {self.value}, Duración: {self.duration}, Duración PERT: {self.pert_duration}, Hijos: {len(self.sons)}"
+    
+    def calcularDuracionPERT(self, optimista, mas_probable, pesimista):
+        """Calcula la duración utilizando la fórmula PERT."""
+        return (optimista + 4 * mas_probable + pesimista) / 6
