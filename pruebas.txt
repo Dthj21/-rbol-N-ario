@@ -1,0 +1,64 @@
+Pruebas Implementadas
+
+El proceso de prueba es una fase crítica en el desarrollo del sistema, ya que asegura la calidad, estabilidad y confiabilidad de las funcionalidades desarrolladas. En este proyecto, se llevaron a cabo diferentes tipos de pruebas, enfocadas en los siguientes aspectos:
+1. Pruebas Unitarias
+
+Se implementaron para verificar que las funciones individuales del sistema trabajen de manera correcta y cumplan con los requisitos definidos.
+
+Ejemplo de prueba unitaria:
+Validación del cálculo de tiempo estimado en nodos del árbol n-ario.
+
+    Escenario:
+    Dado un nodo con tiempos optimistas, probables y pesimistas, la función debe calcular el tiempo esperado usando la fórmula TE=O+4M+P6TE=6O+4M+P​.
+
+    Caso de prueba:
+        Entrada: O = 2, M = 4, P = 6
+        Resultado esperado: TE = 4.33
+        Resultado obtenido: 4.33 (Prueba pasada).
+
+2. Pruebas de Integración
+
+Se verificó la interacción entre los distintos módulos del sistema, como la comunicación entre el módulo de carga de datos desde Excel y la generación de árboles n-arios.
+
+Ejemplo de prueba de integración:
+
+    Escenario:
+    Cargar un archivo Excel con datos estructurados y verificar que los nodos se generen correctamente en el árbol.
+
+    Resultado esperado:
+    Todos los datos del Excel son reflejados en el árbol sin pérdida de información.
+
+3. Pruebas de Interfaz de Usuario
+
+Se realizaron pruebas para garantizar que la experiencia del usuario sea intuitiva y fluida.
+
+Prueba funcional:
+
+    Escenario:
+    Al seleccionar un árbol en la tabla de registros, se debe abrir una ventana modal que muestre los gráficos PERT y CPM.
+
+    Caso de prueba:
+        Acción: Hacer clic en un árbol específico.
+        Resultado esperado: La ventana modal se abre correctamente con los gráficos cargados.
+
+4. Pruebas de Rendimiento
+
+Se evaluó el comportamiento del sistema bajo diferentes condiciones de carga para garantizar su eficiencia.
+
+Escenario:
+
+    Cargar un archivo Excel con 10,000 nodos.
+    Resultado esperado:
+    El sistema genera el árbol en menos de 5 segundos sin fallos en la interfaz.
+
+5. Pruebas de Seguridad
+
+Se validó que el sistema maneje correctamente errores y datos no válidos.
+
+Escenario:
+Intentar cargar un archivo Excel con un formato incorrecto.
+
+    Resultado esperado:
+    El sistema muestra un mensaje de error claro y no permite continuar.
+
+Estas pruebas aseguran que el sistema cumpla con los objetivos definidos, manteniendo un alto estándar de calidad.
