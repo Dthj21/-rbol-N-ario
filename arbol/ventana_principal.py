@@ -1,45 +1,117 @@
-import pandas as pd
 import reflex as rx
-
-nba_data = pd.read_csv(
-    "/home/diego/Descargas/actividades.csv"
-)
-nba_data.columns = nba_data.columns.str.strip()
+from arbol.carga_csv import FormState
+from config.db_config import obtener_proyectos
+from arbol.grafo_cpm import visualizar_ruta_critica
 
 @rx.page(route="/principal", title="Principal")
 def ventana_principal() -> rx.Component:
+    proyectos = FormState.proyectos
+
     return rx.section(
         rx.flex(
-            rx.box(height="1px", margin_top="-30px"),
-            rx.heading(
-                "Ventana principal para los cálculos del árbol N-ario",
-                size="6",
+            rx.box(height="20px"),  # Espaciado superior
+            rx.flex(
+                # Contenedor para centrar título y botón
+                rx.heading(
+                    "Ventana principal para los cálculos del árbol N-ario",
+                    size="lg",
+                    text_align="center",
+                    color="white",
+                ),
+                rx.box(height="20px"),  # Espaciado entre título y botón
+                rx.button(
+                    "Agregar nuevo cálculo",
+                    backgroundColor="#4CAF50",
+                    color="white",
+                    padding="10px 20px",
+                    border_radius="5px",
+                    _hover={"backgroundColor": "#45A049"},
+                    on_click=rx.redirect("/carga"),
+                    align_self="center",
+                ),
+                direction="column",
                 align="center",
-                color="white",
             ),
-            rx.box(height="10px"),
-            rx.button(
-                "Agregar nuevo cálculo",
-                backgroundColor="white",
-                color="black",
-                width="200px",
-                margin="1px 50% 1px 45%",
-                radius="large",
-                on_click=rx.redirect("/carga"),
+            rx.box(height="30px"),  # Espaciado entre el botón y la tabla
+            rx.box(
+                # Contenedor de la tabla
+                rx.text(
+                    "Proyectos",
+                    font_size="lg",
+                    font_weight="bold",
+                    margin_bottom="10px",
+                    text_align="center",
+                    color="white",
+                ),
+                rx.box(
+                    # Tabla
+                    rx.hstack(
+                        # Encabezado
+                        rx.text("Nombre", font_weight="bold", text_align="center", flex="2", color="black"),
+                        rx.text("Descripción", font_weight="bold", text_align="center", flex="4", color="black"),
+                        rx.text("Fecha de Creación", font_weight="bold", text_align="center", flex="2", color="black"),
+                        rx.text("Acciones", font_weight="bold", text_align="center", flex="1", color="black"),
+                        style={
+                            "borderBottom": "2px solid #ddd",
+                            "padding": "10px",
+                            "backgroundColor": "#f2f2f2",
+                        },
+                    ),
+                    rx.foreach(
+                        proyectos,
+                        lambda proyecto: rx.hstack(
+                            rx.text(
+                                proyecto["nombre"],
+                                text_align="left",
+                                flex="2",
+                                color="#333",  # Color de texto visible
+                            ),
+                            rx.text(
+                                proyecto["descripcion"],
+                                text_align="left",
+                                flex="4",
+                                color="#333",  # Color de texto visible
+                            ),
+                            rx.text(
+                                proyecto["fecha_creacion"],
+                                text_align="center",
+                                flex="2",
+                                color="#333",  # Color de texto visible
+                            ),
+                            rx.button(
+                                "Ver Gráfico",
+                                backgroundColor="#2196F3",
+                                color="white",
+                                padding="5px",
+                                border_radius="3px",
+                                _hover={"backgroundColor": "#0b7dda"},
+                                on_click=rx.redirect(f"/grafo?proyecto_id={proyecto['proyecto_id']}"),
+                                flex="1",
+                            ),
+                            style={
+                                "borderBottom": "1px solid #ddd",
+                                "padding": "10px",
+                                "backgroundColor": "white",
+                            },
+                        ),
+                    ),
+                ),
+                style={
+                    "border": "1px solid #ccc",
+                    "borderRadius": "5px",
+                    "overflow": "hidden",
+                    "backgroundColor": "white",
+                },
+                padding="10px",
+                margin="0 auto",
+                width="90%",
             ),
-            rx.box(height="10px"),
-            rx.data_table(
-                data=nba_data[["Actividad", "Predecesores", "Duracion", "Optimista", "Mas probable", "Pesimista"]],
-                pagination=True,
-                search=True,
-                sort=True,
-            ),
-            direction="column",
-            gap="20px",
         ),
+        direction="column",
+        gap="20px",
         style={
-            "backgroundColor": "#385481", 
-            "padding": "20px",            
+            "backgroundColor": "#385481",
+            "padding": "20px",
             "minHeight": "100vh",
         },
- )
+    )
