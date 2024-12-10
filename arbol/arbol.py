@@ -1,7 +1,7 @@
 """Welcome to Reflex! This file outlines the steps to create a basic app."""
 
 import reflex as rx
-
+from arbol.grafo_cpm import visualizar_ruta_critica
 from rxconfig import config
 
 
@@ -37,3 +37,4 @@ def index() -> rx.Component:
 
 app = rx.App()
 app.add_page(index)
+app.add_page(visualizar_ruta_critica)

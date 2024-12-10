@@ -1,3 +1,4 @@
+from urllib.parse import parse_qs
 import networkx as nx
 import reflex as rx
 import matplotlib.pyplot as plt
@@ -6,13 +7,9 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from config.db_config import create_connection
-from urllib.parse import urlparse, parse_qs
 
 @rx.page(route="/grafo", title="Gráficos")
-def visualizar_ruta_critica(proyecto_id: str = None):
-    print(f"Proyecto ID recibido: {proyecto_id}")
-    if not proyecto_id:
-        return rx.text("Error: No se proporcionó un ID de proyecto.")
+def visualizar_ruta_critica(proyecto_id: str = 98):
     try:
         connection = create_connection()
         if not connection:
