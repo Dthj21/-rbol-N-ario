@@ -9,16 +9,15 @@ def ventana_principal() -> rx.Component:
 
     return rx.section(
         rx.flex(
-            rx.box(height="20px"),  # Espaciado superior
+            rx.box(height="20px"),
             rx.flex(
-                # Contenedor para centrar título y botón
                 rx.heading(
                     "Ventana principal para los cálculos del árbol N-ario",
                     size="lg",
                     text_align="center",
                     color="white",
                 ),
-                rx.box(height="20px"),  # Espaciado entre título y botón
+                rx.box(height="20px"),
                 rx.button(
                     "Agregar nuevo cálculo",
                     backgroundColor="#4CAF50",
@@ -32,9 +31,8 @@ def ventana_principal() -> rx.Component:
                 direction="column",
                 align="center",
             ),
-            rx.box(height="30px"),  # Espaciado entre el botón y la tabla
+            rx.box(height="30px"),
             rx.box(
-                # Contenedor de la tabla
                 rx.text(
                     "Proyectos",
                     font_size="lg",
@@ -44,9 +42,7 @@ def ventana_principal() -> rx.Component:
                     color="white",
                 ),
                 rx.box(
-                    # Tabla
                     rx.hstack(
-                        # Encabezado
                         rx.text("Nombre", font_weight="bold", text_align="center", flex="2", color="black"),
                         rx.text("Descripción", font_weight="bold", text_align="center", flex="4", color="black"),
                         rx.text("Fecha de Creación", font_weight="bold", text_align="center", flex="2", color="black"),
@@ -64,19 +60,19 @@ def ventana_principal() -> rx.Component:
                                 proyecto["nombre"],
                                 text_align="left",
                                 flex="2",
-                                color="#333",  # Color de texto visible
+                                color="#333",
                             ),
                             rx.text(
                                 proyecto["descripcion"],
                                 text_align="left",
                                 flex="4",
-                                color="#333",  # Color de texto visible
+                                color="#333",
                             ),
                             rx.text(
                                 proyecto["fecha_creacion"],
                                 text_align="center",
                                 flex="2",
-                                color="#333",  # Color de texto visible
+                                color="#333",
                             ),
                             rx.button(
                                 "Ver Gráfico",

@@ -50,7 +50,6 @@ def calcular_ruta_critica(proyecto_id: int):
                               "inicio_tardio": float('inf'), "finalizacion_tardio": float('inf')}
                    for tarea_id in tareas_dict}
 
-        # Cálculo de tiempos tempranos
         print("\nCálculo de tiempos tempranos:")
         for tarea_id in tareas_dict:
             duracion = tareas_dict[tarea_id]["duracion_pert"]
@@ -61,27 +60,31 @@ def calcular_ruta_critica(proyecto_id: int):
             tiempos[tarea_id]["finalizacion_temprana"] = inicio_temprano + duracion
             print(f"Tarea {tarea_id} ({tareas_dict[tarea_id]['nombre']}): Inicio Temprano = {inicio_temprano}, Finalización Temprana = {inicio_temprano + duracion}")
 
-        # Cálculo de tiempos tardíos
-        # Cálculo de tiempos tardíos
         print("\nCálculo de tiempos tardíos:")
-        tareas_ordenadas = sorted(tareas_dict.keys(), reverse=True)  # Ordenar de manera inversa
-        for tarea_id in tareas_ordenadas:
-            duracion = tareas_dict[tarea_id]["duracion_pert"]
+
+        final_proyecto = max(tiempos[tarea_id]["finalizacion_temprana"] for tarea_id in tareas_dict)
+
+        for tarea_id in tareas_dict:
             if not sucesores_dict[tarea_id]:
-        # Si no tiene sucesores, igualar el tiempo tardío a la finalización temprana
-                tiempos[tarea_id]["finalizacion_tardio"] = tiempos[tarea_id]["finalizacion_temprana"]
-                tiempos[tarea_id]["inicio_tardio"] = tiempos[tarea_id]["finalizacion_tardio"] - duracion
-            else:
-        # Si tiene sucesores, tomar el tiempo tardío mínimo de sus sucesores
+                tiempos[tarea_id]["finalizacion_tardio"] = final_proyecto
+                tiempos[tarea_id]["inicio_tardio"] = final_proyecto - tareas_dict[tarea_id]["duracion_pert"]
+
+        tareas_ordenadas = sorted(tareas_dict.keys(), reverse=True)
+
+        for tarea_id in tareas_ordenadas:
+            if sucesores_dict[tarea_id]:
                 finalizacion_tardio = min(
-                    [tiempos[sucesor_id]["inicio_tardio"] for sucesor_id in sucesores_dict[tarea_id]]
+                    tiempos[sucesor_id]["inicio_tardio"] for sucesor_id in sucesores_dict[tarea_id]
                 )
                 tiempos[tarea_id]["finalizacion_tardio"] = finalizacion_tardio
-                tiempos[tarea_id]["inicio_tardio"] = finalizacion_tardio - duracion
+                tiempos[tarea_id]["inicio_tardio"] = finalizacion_tardio - tareas_dict[tarea_id]["duracion_pert"]
 
-            print(f"Tarea {tarea_id} ({tareas_dict[tarea_id]['nombre']}): Inicio Tardío = {tiempos[tarea_id]['inicio_tardio']}, Finalización Tardía = {tiempos[tarea_id]['finalizacion_tardio']}")
+            print(
+                f"Tarea {tarea_id} ({tareas_dict[tarea_id]['nombre']}): "
+                f"Inicio Tardío = {tiempos[tarea_id]['inicio_tardio']}, "
+                f"Finalización Tardía = {tiempos[tarea_id]['finalizacion_tardio']}"
+            )
 
-        # Cálculo de holguras y ruta crítica
         print("\nCálculo de holguras:")
         ruta_critica = []
         for tarea_id, tiempo in tiempos.items():
@@ -93,7 +96,6 @@ def calcular_ruta_critica(proyecto_id: int):
 
         ruta_critica_str = " -> ".join(ruta_critica)
         print(f"\nRuta crítica del proyecto {proyecto_id}: {ruta_critica_str}")
-
 
         if not ruta_critica_str:
             print(f"No se ha podido calcular la ruta crítica para el proyecto {proyecto_id}.")

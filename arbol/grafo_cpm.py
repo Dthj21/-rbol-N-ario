@@ -6,10 +6,13 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from config.db_config import create_connection
+from urllib.parse import urlparse, parse_qs
 
 @rx.page(route="/grafo", title="Gráficos")
-def visualizar_ruta_critica(proyecto_id: str = 98):
-
+def visualizar_ruta_critica(proyecto_id: str = None):
+    print(f"Proyecto ID recibido: {proyecto_id}")
+    if not proyecto_id:
+        return rx.text("Error: No se proporcionó un ID de proyecto.")
     try:
         connection = create_connection()
         if not connection:
@@ -36,7 +39,6 @@ def visualizar_ruta_critica(proyecto_id: str = 98):
             cursor.execute(query_dependencias, (proyecto_id,))
             dependencias = cursor.fetchall()
 
-        # Crear el grafo
         G = nx.DiGraph()
         for tarea_id, nombre, duracion in tareas:
             G.add_node(tarea_id, label=nombre, duracion=duracion)
@@ -44,27 +46,24 @@ def visualizar_ruta_critica(proyecto_id: str = 98):
         for tarea_id, predecesor_id in dependencias:
             G.add_edge(predecesor_id, tarea_id)
 
-        # Calcular ruta crítica
         ruta_critica = calcular_ruta_critica(proyecto_id)
 
         if not ruta_critica:
             print(f"No se pudo calcular la ruta crítica para el proyecto {proyecto_id}.")
             return rx.text(f"No se pudo calcular la ruta crítica para el proyecto {proyecto_id}.")
 
-        # Resaltar la ruta crítica
         ruta_nodos = [t[0] for t in tareas if t[1] in ruta_critica.split(" -> ")]
         node_colors = ["orange" if node in ruta_nodos else "lightblue" for node in G.nodes]
         edge_colors = ["red" if (u in ruta_nodos and v in ruta_nodos) else "gray" for u, v in G.edges]
 
-        # Dibujar y guardar la imagen
         pos = nx.spring_layout(G)
         plt.figure(figsize=(12, 8))
         nx.draw(G, pos, with_labels=True, node_color=node_colors, edge_color=edge_colors, node_size=3000, font_size=10)
         nx.draw_networkx_labels(G, pos, labels={n: f"{G.nodes[n]['label']} ({G.nodes[n]['duracion']})" for n in G.nodes})
         plt.title(f"Ruta Crítica del Proyecto {proyecto_id}")
-        plt.savefig("assets/ruta_critica.png")  # Guardar en la carpeta 'assets'
+        plt.savefig("assets/ruta_critica.png")
 
-        return rx.image(src="/ruta_critica.png")  # Mostrar la imagen
+        return rx.image(src="/ruta_critica.png")
 
     except Exception as e:
         print(f"Error al visualizar la Ruta Crítica: {str(e)}")
